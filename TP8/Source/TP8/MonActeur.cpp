@@ -3,11 +3,28 @@
 
 #include "MonActeur.h"
 
+
 // Sets default values
 AMonActeur::AMonActeur()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	//Partie III: construction de l'objet VisualMesh
+	MonMaillage = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	MonMaillage->SetupAttachment(RootComponent);
+	ConstructorHelpers::FObjectFinder<UStaticMesh> CubeVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_Cube.Shape_Cube"));
+	ConstructorHelpers::FObjectFinder<UMaterial> CubeMaterial(TEXT("/Game/StarterContent/Materials/M_Tech_Hex_Tile_Pulse"));
+	if (CubeVisualAsset.Succeeded()) {
+		MonMaillage->SetStaticMesh(CubeVisualAsset.Object);
+		MonMaillage->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+		MonMaillage->SetMaterial(0, CubeMaterial.Object);
+	}
+
+	MonEffetParticules = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("MovementParticles"));
+	MonMaillage->SetupAttachment(MonEffetParticules);
+
+	ConstructorHelpers::FObjectFinder<UParticleSystem> ParticleAsset(TEXT("/Game/StarterContent/Particles/P_Steam_Lit"));
+	MonEffetParticules->SetTemplate(ParticleAsset.Object);
 
 }
 
@@ -27,6 +44,18 @@ void AMonActeur::BeginPlay()
 // Called every frame
 void AMonActeur::Tick(float DeltaTime)
 {
+	FVector NewLocation = GetActorLocation();
+	float RunningTime = GetGameTimeSinceCreation();
+	float DeltaHeight = (FMath::Sin(RunningTime + DeltaTime) - FMath::Sin(RunningTime));
+	NewLocation.Z += DeltaHeight * 100.0f; //Scale our height by a factor of 100;
+	/*NewLocation.X += (rand() % 10)-5;
+	NewLocation.Y += (rand() % 10)-5;*/
+	SetActorLocation(NewLocation);
+
+	FRotator NewRotation = GetActorRotation();
+	NewRotation.Yaw += 10;
+	SetActorRotation(NewRotation);
+
 	Super::Tick(DeltaTime);
 
 }

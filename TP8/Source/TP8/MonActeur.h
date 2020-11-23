@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MonActeur.generated.h"
+#include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
 
+#include "MonActeur.generated.h"
 
 UCLASS()
 class TP8_API AMonActeur : public AActor
@@ -14,7 +16,8 @@ class TP8_API AMonActeur : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AMonActeur();
-
+	UPROPERTY(VisibleAnywhere)UStaticMeshComponent* MonMaillage;
+	UParticleSystemComponent* MonEffetParticules;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -22,5 +25,5 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
 };
