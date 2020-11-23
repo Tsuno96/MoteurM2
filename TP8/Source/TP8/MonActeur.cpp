@@ -25,6 +25,7 @@ AMonActeur::AMonActeur()
 
 	ConstructorHelpers::FObjectFinder<UParticleSystem> ParticleAsset(TEXT("/Game/StarterContent/Particles/P_Steam_Lit"));
 	MonEffetParticules->SetTemplate(ParticleAsset.Object);
+	effetFume = false;
 
 }
 
@@ -38,6 +39,7 @@ void AMonActeur::BeginPlay()
 
 	FString nom = FString::Printf(TEXT("Nom de l'acteur dans une variable %s "), *(this->GetName()));
 	UE_LOG(LogActor, Warning, TEXT("%s"), *nom);
+
 	Super::BeginPlay();
 }
 
@@ -47,14 +49,23 @@ void AMonActeur::Tick(float DeltaTime)
 	FVector NewLocation = GetActorLocation();
 	float RunningTime = GetGameTimeSinceCreation();
 	float DeltaHeight = (FMath::Sin(RunningTime + DeltaTime) - FMath::Sin(RunningTime));
-	NewLocation.Z += DeltaHeight * 100.0f; //Scale our height by a factor of 100;
+	NewLocation.Z += DeltaHeight * VitesseDeplacement; //Scale our height by a factor of 100;
 	/*NewLocation.X += (rand() % 10)-5;
 	NewLocation.Y += (rand() % 10)-5;*/
 	SetActorLocation(NewLocation);
 
 	FRotator NewRotation = GetActorRotation();
-	NewRotation.Yaw += 10;
+	NewRotation.Yaw += VitesseRotation;
 	SetActorRotation(NewRotation);
+
+	if (effetFume)
+	{
+		MonEffetParticules->Activate();
+	}
+	else
+	{
+		MonEffetParticules->Deactivate();
+	}
 
 	Super::Tick(DeltaTime);
 

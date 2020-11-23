@@ -18,6 +18,9 @@ public:
 	AMonActeur();
 	UPROPERTY(VisibleAnywhere)UStaticMeshComponent* MonMaillage;
 	UParticleSystemComponent* MonEffetParticules;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ActeurFlottant")float VitesseDeplacement;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ActeurFlottant")float VitesseRotation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)bool effetFume;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
